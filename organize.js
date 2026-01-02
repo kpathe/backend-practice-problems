@@ -1,48 +1,53 @@
 const fs = require("fs");
-const fsmove = require("fs-extra");
-const path = require("node:path");
+const path = require("path");
 
-const filepath = process.argv[2];
+const baseDir = process.argv[2];
 
-// reading folder
-const folder = fs.readdirSync(filepath);
+if (!baseDir) {
+  console.log("Please provide a folder path!");
+  process.exit();
+}
 
-// categorising files according to extension names
+const extensions = {
+  Images: [".jpg", "jpeg", ".png", ".gif"],
+  Videos: [".mp4", ".mkv", ".avi"],
+  Docs: [".pdf", ".txt", ".doc", ".docx"],
+};
 
-const img = [];
-const vid = [];
-const doc = [];
-
-for (const file of folder) {
-  switch (true) {
-    case path.extname(`${filepath}\\${file}`) === ".jpg":
-      img.push(file);
-      break;
-    case path.extname(`${filepath}\\${file}`) === ".mp4":
-      vid.push(file);
-      break;
-    case path.extname(`${filepath}\\${file}`) === ".pdf":
-      doc.push(file);
-      break;
-
-    default:
-      break;
+const getCategory = (ext) => {
+  for (const category in extensions) {
+    if (extensions[category].includes(ext)) {
+      return category;
+    }
   }
-}
 
-// making folders
-fs.mkdirSync(`${filepath}\\Images`);
-fs.mkdirSync(`${filepath}\\Videos`);
-fs.mkdirSync(`${filepath}\\Docs`);
+  return "Others";
+};
 
+try {
+  const files = fs.readdirSync(baseDir); // an array of file names
 
-// moving files
-for (const image of img) {
-  fsmove.moveSync(`${filepath}\\${image}`, `${filepath}\\Images\\${image}`);
-}
-for (const video of vid) {
-  fsmove.moveSync(`${filepath}\\${video}`, `${filepath}\\Videos\\${video}`);
-}
-for (const document of doc) {
-  fsmove.moveSync(`${filepath}\\${document}`, `${filepath}\\Docs\\${document}`);
+  files.forEach((file) => {
+    const srcPath = path.join(baseDir, file);
+
+    if (fs.lstatSync(srcPath).isFile()) {
+      const ext = path.extname(file);
+      const category = getCategory(ext);
+
+      if (category !== "Others") {
+        const targetFolder = path.join(baseDir, category);
+        const targetPath = path.join(targetFolder, file);
+
+        if (!fs.existsSync(targetFolder)) {
+          fs.mkdirSync(targetFolder);
+          console.log(`Created folder: ${category}`);
+        }
+
+        fs.renameSync(srcPath, targetPath);
+        console.log(`Moved : ${file} -> ${category}`);
+      }
+    }
+  });
+} catch (err) {
+  console.error("Error: ", err.message);
 }
