@@ -30,10 +30,13 @@ for (const file of folder) {
   }
 }
 
+// making folders
 fs.mkdirSync(`${filepath}\\Images`);
 fs.mkdirSync(`${filepath}\\Videos`);
 fs.mkdirSync(`${filepath}\\Docs`);
 
+
+// moving files
 for (const image of img) {
   fsmove.moveSync(`${filepath}\\${image}`, `${filepath}\\Images\\${image}`);
 }
