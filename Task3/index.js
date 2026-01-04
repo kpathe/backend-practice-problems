@@ -8,6 +8,7 @@ const todos = [
 ];
 
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 app.get("/api/todos", (req, res) => {
   return res.json(todos);
@@ -26,16 +27,16 @@ app.get("/api/todos/:id", (req, res) => {
 
 app.post("/api/todos", (req, res) => {
   const todo = req.body;
-  if (!todo || !todo.id || !todo.name || !todo.status) {
+  if (!todo || !todo.id || !todo.name || todo.status === undefined) {
     return res.status(400).json({ msg: "All fields are required" });
   }
-  todos.push(todo);
+  todos.push({ ...todo, id: todos.length + 1 });
   return res.status(201).json({ msg: "todo added" });
 });
 
 app.patch("/api/todos/:id", (req, res) => {
   const id = Number(req.params.id);
-  
+
   if (!id) return res.status(400).json({ msg: "Please provide id" });
   const todo = todos.find((todo) => todo.id === id);
 
@@ -53,10 +54,11 @@ app.delete("/api/todos/:id", (req, res) => {
   if (!id) return res.status(400).json({ msg: "Please provide id" });
   const todoIndex = todos.findIndex((todo) => todo.id === id);
 
-  if (todoIndex > 0) {
+  if (todoIndex !== -1) {
     todos.splice(todoIndex, 1);
     return res.status(200).json({ msg: "Todo deleted!" });
   }
+  return res.status(404).json({ msg: "Todo not found" });
 });
 
 app.listen(PORT, () => {
