@@ -27,7 +27,7 @@ app.get("/api/todos/:id", (req, res) => {
 
 app.post("/api/todos", (req, res) => {
   const todo = req.body;
-  if (!todo || !todo.id || !todo.name || todo.status === undefined) {
+  if (!todo || !todo.name || todo.status === undefined) {
     return res.status(400).json({ msg: "All fields are required" });
   }
   todos.push({ ...todo, id: todos.length + 1 });
