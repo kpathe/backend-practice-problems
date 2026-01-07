@@ -11,7 +11,7 @@ const studentSchema = new mongoose.Schema(
     },
     department: {
       type: String,
-      require: true,
+      required: true,
     },
     subjects: [{ type: String }],
   },
