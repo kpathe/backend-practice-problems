@@ -10,12 +10,11 @@ async function handleGenerateShortURL(req, res) {
     visitHistory: [],
   });
 
-  return res.json({ msg: "URL created!", id: shortID });
+  return res.render("index", { id: entry.shortID, result: entry });
 }
 
 async function handleRedirectURL(req, res) {
-  const shortURL = req.params["shortID"];
-//   console.log(shortURL);
+  const shortURL = req.params.shortID;
   const result = await URL.findOneAndUpdate(
     { shortID: shortURL },
     { $push: { visitHistory: { timestamps: Date.now() } } },
