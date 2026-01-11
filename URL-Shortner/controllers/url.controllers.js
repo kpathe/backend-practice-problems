@@ -4,10 +4,12 @@ const URL = require("../models/url.models");
 async function handleGenerateShortURL(req, res) {
   const body = req.body;
   const shortID = nanoid(8);
+  console.log(req.user._id);
   const entry = await URL.create({
     shortID: shortID,
     redirectURL: body.url,
     visitHistory: [],
+    createdBy: req.user._id,
   });
 
   return res.render("index", { id: entry.shortID, result: entry });

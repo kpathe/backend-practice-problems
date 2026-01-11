@@ -2,13 +2,17 @@ const mongoose = require("mongoose");
 const urlSchema = mongoose.Schema(
   {
     shortID: {
-      type: "string",
-      unique: "true",
+      type: String,
+      unique: true,
     },
     redirectURL: {
-      type: "string",
+      type: String,
     },
-    visitHistory: [{ timestamps: { type: "number" } }],
+    visitHistory: [{ timestamps: { type: Number } }],
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+    },
   },
   { timestamps: true }
 );

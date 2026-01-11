@@ -1,7 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const renderHTML = require("../controllers/renderHTML.controllers");
+const {
+  handleRenderHTML,
+  handleRenderSignup,
+  handleRenderLogin,
+} = require("../controllers/renderHTML.controllers");
 
-router.get("/", renderHTML);
+router.get("/", handleRenderHTML);
+
+
 
 module.exports = router;
