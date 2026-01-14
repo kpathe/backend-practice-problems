@@ -5,14 +5,13 @@ const { setUser } = require("../services/auth.services");
 async function handleUserSignup(req, res) {
   const { name, email, password } = req.body;
 
-  const existingUser = await User.findOne({ email: email });
-
-  if (email == existingUser.email) {
-    return res.redirect("login");
-  }
-
   if (!name || !email || !password) {
     return res.json({ msg: "All fields are required" });
+  }
+  const existingUser = await User.findOne({ email: email });
+
+  if (email == existingUser?.email) {
+    return res.redirect("login");
   }
 
   const passwordEncrypt = await bcrypt.hash(password, 10);
@@ -23,7 +22,7 @@ async function handleUserSignup(req, res) {
     password: passwordEncrypt,
   });
 
-  res.json({ msg: "User created !" });
+  res.redirect("login");
 }
 
 async function handleUserLogin(req, res) {
@@ -39,7 +38,10 @@ async function handleUserLogin(req, res) {
 
   const token = setUser(user);
 
-  return res.cookie("token", token).json({ msg: "Logged in" });
+  return res.cookie("token", token).redirect("/diary");
 }
 
-module.exports = { handleUserLogin, handleUserSignup };
+async function handleUserLogout(req, res) {
+  res.cookie("token", "").json({ msg: "User logged out!" });
+}
+module.exports = { handleUserLogin, handleUserSignup, handleUserLogout };

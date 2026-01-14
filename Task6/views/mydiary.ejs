@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Diary</title>
+  </head>
+  <body>
+    <h1>My Diary Entries</h1>
+    <div id="create-entry">
+        <form action="/diary" method="post">
+            <textarea name="content" id="" placeholder="Write your thoughts here"></textarea>
+            <button type="submit">Post</button>
+        </form>
+    </div>
+    <div id="entries">
+      <ul>
+        <% entry.forEach(item => { %>
+        <li id="<%= item._id  %>">
+          <%= item.date %> <br />
+          <p style="font-family: Verdana, Geneva, Tahoma, sans-serif">
+            <%= item.content %>
+          </p>
+          <button>Edit</button>
+          <button>Delete</button>
+        </li>
+        <% }) %>
+      </ul>
+    </div>
+  </body>
+</html>
