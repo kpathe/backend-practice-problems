@@ -5,6 +5,8 @@ async function handleCreateEntry(req, res) {
   const date = new Date();
   const dateString = date.toLocaleString();
 
+  console.log(req.user._id);
+
   const entry = await Entry.create({
     content: content,
     date: dateString,
@@ -18,14 +20,14 @@ async function handleGetEntry(req, res) {
     createdBy: req.user._id,
   });
 
-  console.log(entry);
+  entry.reverse(); // reversed the array so that latest entry comes first
 
   res.render("mydiary", { entry });
   // res.json({ msg: "Entries fetched", entry });
 }
 
 async function handleEditEntry(req, res) {
-  const { content, id } = req.body;
+  const { id, content } = req.body;
   const entry = await Entry.findOneAndUpdate(
     {
       _id: id,

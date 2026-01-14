@@ -42,6 +42,6 @@ async function handleUserLogin(req, res) {
 }
 
 async function handleUserLogout(req, res) {
-  res.cookie("token", "").json({ msg: "User logged out!" });
+  res.clearCookie("token").json("User logged out");
 }
 module.exports = { handleUserLogin, handleUserSignup, handleUserLogout };

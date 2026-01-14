@@ -7,25 +7,106 @@
   </head>
   <body>
     <h1>My Diary Entries</h1>
+    <div>
+      <button id="logout">Logout</button>
+    </div>
     <div id="create-entry">
-        <form action="/diary" method="post">
-            <textarea name="content" id="" placeholder="Write your thoughts here"></textarea>
-            <button type="submit">Post</button>
-        </form>
+      <form action="/diary" method="post">
+        <textarea
+          name="content"
+          id=""
+          placeholder="Write your thoughts here"
+        ></textarea>
+        <button type="submit">Post</button>
+      </form>
     </div>
     <div id="entries">
       <ul>
         <% entry.forEach(item => { %>
         <li id="<%= item._id  %>">
           <%= item.date %> <br />
-          <p style="font-family: Verdana, Geneva, Tahoma, sans-serif">
+          <p style="font-family: Verdana" data-id="<%= item._id %>">
             <%= item.content %>
           </p>
-          <button>Edit</button>
-          <button>Delete</button>
+          <button class="edit-button" id="<%= item._id %>">Edit</button>
+          <button class="delete-button" id="<%= item._id %>">Delete</button>
         </li>
         <% }) %>
       </ul>
     </div>
   </body>
+
+  <script>
+    //logout
+    const logoutButton = document.querySelector("#logout");
+    logoutButton.addEventListener("click", (e) => {
+      fetch("/user/logout", {
+        method: "POST",
+      }).then((response) => {
+        console.log(response);
+        window.location.href = "/";
+      });
+    });
+
+    const entries = document.querySelector("ul");
+
+    entries.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const id = e.target.id;
+      console.log(id);
+
+      if (e.target.tagName === "BUTTON") {
+        if (e.target.className === "edit-button") {
+          const editInput = document.createElement("textarea");
+          content = document.querySelector(`[data-id="${id}"]`);
+
+          editInput.textContent = content.innerText;
+
+          const li = e.target.parentNode;
+          li.appendChild(editInput);
+
+          e.target.remove();
+          content.remove();
+
+          const saveButton = document.createElement("button");
+          saveButton.className = "save-button";
+          saveButton.textContent = "Save";
+          saveButton.id = id;
+          li.appendChild(saveButton);
+        }
+
+        if (e.target.className === "save-button") {
+          //   console.log("save button clicked");
+          console.log(id);
+
+          const li = e.target.parentNode;
+          const textinput = li.querySelector("textarea");
+          const content = textinput.value;
+          fetch("/diary", {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: id, content: content }),
+          }).then((response) => {
+            console.log(response);
+            window.location.href = "/diary";
+          });
+        }
+        if (e.target.className === "delete-button") {
+          console.log("Delete button Clicked");
+          fetch("/diary", {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id }),
+          }).then((response) => {
+            console.log(response);
+          });
+          document.getElementById(id).remove();
+        }
+      }
+    });
+  </script>
 </html>
