@@ -6,6 +6,18 @@ const User = require("./models/user.models");
 const mongoose = require("mongoose");
 const PORT = 8000;
 
+// Require the cloudinary library
+const cloudinary = require("cloudinary").v2;
+
+// Return "https" URLs by setting secure: true
+require("dotenv").config(); // Load the .env file
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
+
 app.use(express.urlencoded({ extended: false }));
 
 app.set("view engine", "ejs");
@@ -33,14 +45,34 @@ app.post(
   "/profile/upload",
   upload.single("profilePicture"),
   async (req, res) => {
+    const filePath = req.file.path;
+
+    const uploadImage = async (filePath) => {
+      const options = {
+        use_filename: true,
+        unique_filename: false,
+        overwrite: true,
+      };
+
+      try {
+        const result = await cloudinary.uploader.upload(filePath, options);
+        console.log(result);
+        return result;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const uploadedPicture = await uploadImage(filePath);
+    console.log(uploadedPicture);
+
     const { name, email } = req.body;
     const user = await User.create({
       name: name,
       email: email,
-      profilePicture: req.file.path,
+      profilePicture: uploadedPicture.secure_url,
     });
-    console.log(req.file);
-    return res.redirect("/");
+    return res.json({ msg: "Profile created successfully" });
   },
 );
 
