@@ -64,7 +64,7 @@ app.post(
     };
 
     const uploadedPicture = await uploadImage(filePath);
-    console.log(uploadedPicture);
+    // console.log(uploadedPicture);
 
     const { name, email } = req.body;
     const user = await User.create({
@@ -72,7 +72,7 @@ app.post(
       email: email,
       profilePicture: uploadedPicture.secure_url,
     });
-    return res.json({ msg: "Profile created successfully" });
+    return res.json({ msg: "Profile created successfully" ,user: user.name});
   },
 );
 
