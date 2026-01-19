@@ -5,6 +5,7 @@ const multer = require("multer");
 const User = require("./models/user.models");
 const mongoose = require("mongoose");
 const PORT = 8000;
+const fs = require("fs");
 
 // Require the cloudinary library
 const cloudinary = require("cloudinary").v2;
@@ -72,7 +73,12 @@ app.post(
       email: email,
       profilePicture: uploadedPicture.secure_url,
     });
-    return res.json({ msg: "Profile created successfully" ,user: user.name});
+
+    fs.unlink(filePath, (err) => {
+      if (err) throw err;
+      console.log(`Local file with path ${filePath} deleted`);
+    });
+    return res.json({ msg: "Profile created successfully", user: user.name });
   },
 );
 
