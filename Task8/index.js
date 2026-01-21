@@ -5,6 +5,7 @@ const userRouter = require("./routes/user.routes");
 const tweetRouter = require("./routes/tweet.routes");
 const verifyJWT = require("./middlewares/auth.middlewares");
 const cookieParser = require("cookie-parser");
+const handleGetFeed = require("./controllers/feed.controllers");
 const app = express();
 const PORT = process.env.PORT || 8000;
 const mongodbURI = process.env.MONGODB_URI;
@@ -17,6 +18,8 @@ app.use(express.static("public"));
 
 app.use("/api/user", userRouter);
 app.use("/api/tweet", verifyJWT, tweetRouter);
+
+app.get("/api/feed",verifyJWT,handleGetFeed)
 
 app.listen(PORT, () => {
   console.log(`Server is listening at PORT : ${PORT}`);
