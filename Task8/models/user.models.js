@@ -15,7 +15,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    subscriptions: [{ type: Schema.Types.ObjectId, ref: "user" }],
+    channels: [{ type: Schema.Types.ObjectId, ref: "user" }],
     followers: [{ type: Schema.Types.ObjectId, ref: "user" }],
   },
   { timestamps: true },
