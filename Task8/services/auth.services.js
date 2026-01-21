@@ -4,6 +4,7 @@ const jwtsecret = process.env.JWT_SECRET;
 function createToken(user) {
   const token = jwt.sign(
     {
+      _id:user._id,
       email: user.email,
       fullName: user.fullName,
     },

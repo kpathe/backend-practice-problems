@@ -27,7 +27,7 @@ async function handleUserLogin(req, res) {
   if (!email || !password) return res.send("All fields are required");
 
   const user = await User.findOne({ email: email });
-  console.log(user);
+  // console.log(user);
   const isPasswordValid = await bcrypt.compare(password, user.password);
   console.log("Password validity : ", isPasswordValid);
 
