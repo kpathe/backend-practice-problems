@@ -5,9 +5,22 @@ const commentSchema = new Schema({
     type: String,
     required: true,
   },
-  tweetId: { type: Schema.Types.ObjectId, ref: "tweet" },
-  likes: [{ type: Schema.Types.ObjectId, ref: "user" }],
-  comments: [{ type: Schema.Types.ObjectId, ref: "comment" }],
+  tweetId: {
+    type: Schema.Types.ObjectId,
+    ref: "tweet",
+  },
+  likes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+    },
+  ],
+  comments: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "comment",
+    },
+  ],
 });
 const Comment = model("comment", commentSchema);
 module.exports = Comment;

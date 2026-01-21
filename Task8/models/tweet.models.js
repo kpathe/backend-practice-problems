@@ -10,9 +10,22 @@ const tweetSchema = new Schema(
       type: String,
       required: false,
     },
-    createdBy: { type: Schema.Types.ObjectId, ref: "user" },
-    likes: [{ type: Schema.Types.ObjectId, ref: "user" }],
-    comments: [{ type: Schema.Types.ObjectId, ref: "comment" }],
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+    },
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+      },
+    ],
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "comment",
+      },
+    ],
   },
   { timestamps: true },
 );
