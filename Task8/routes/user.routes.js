@@ -10,7 +10,21 @@ const {
 } = require("../controllers/user.controllers");
 const router = express.Router();
 
-router.post("/signup", handleUserSignUp);
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    return cb(null, "./public/uploads");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    return cb(null, file.fieldname + "-" + uniqueSuffix);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+router.post("/signup",upload.single("profileImage"), handleUserSignUp);
 router.post("/login", handleUserLogin);
 router.get("/logout", handleUserLogout);
 

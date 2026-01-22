@@ -8,7 +8,7 @@ async function handleCreateTweet(req, res) {
 
   const tweet = await Tweet.create({
     content: content,
-    imageURL: req.file.path,
+    imageURL: req?.file?.path||"",
     createdBy: req.user._id,
   });
 

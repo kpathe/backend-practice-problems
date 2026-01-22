@@ -9,14 +9,17 @@ async function handleUserSignUp(req, res) {
     return res.send("All fields are required");
 
   try {
+    // const profileURL = ;
     const user = await User.create({
       fullName: fullName,
       email: email,
       password: password,
+      profileImage: req?.file?.path || "",
     });
 
     return res.json({ fullName: user.fullName, email: user.email });
   } catch (error) {
+    console.log(error);
     return res.json({ msg: `Error creating user!`, error: error });
   }
 }

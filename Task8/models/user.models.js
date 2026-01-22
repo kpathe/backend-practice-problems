@@ -15,6 +15,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    profileImage:{
+      type:String,
+      required:false
+    },
     channels: [{ type: Schema.Types.ObjectId, ref: "user" }],
     followers: [{ type: Schema.Types.ObjectId, ref: "user" }],
   },
