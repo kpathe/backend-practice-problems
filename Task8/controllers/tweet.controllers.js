@@ -8,7 +8,7 @@ async function handleCreateTweet(req, res) {
 
   const tweet = await Tweet.create({
     content: content,
-    imageURL: req?.file?.path||"",
+    imageURL: req?.file?.path || "",
     createdBy: req.user._id,
   });
 
@@ -29,8 +29,39 @@ async function handleDeleteTweet(req, res) {
   return res.json(deletedTweet);
 }
 
+async function handleLikeTweet(req, res) {
+  const tweet = await Tweet.findByIdAndUpdate(
+    { _id: req.params.tweetId },
+    [
+      {
+        $set: {
+          isLiked: { $in: [req.user._id, "$likes"] },
+        },
+      },
+      {
+        $set: {
+          likes: {
+            $cond: [
+              "$isLiked",
+              { $setDifference: ["$likes", [req.user._id]] },
+              { $concatArrays: ["$likes", [req.user._id]] },
+            ],
+          },
+        },
+      },
+      {
+        $unset: "isLiked",
+      },
+    ],
+    { new: true, updatePipeline: true },
+  );
+
+  return res.json(tweet.likes);
+}
+
 module.exports = {
   handleCreateTweet,
   handleGetTweet,
   handleDeleteTweet,
+  handleLikeTweet,
 };

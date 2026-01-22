@@ -4,6 +4,7 @@ const {
   handleCreateTweet,
   handleGetTweet,
   handleDeleteTweet,
+  handleLikeTweet,
 } = require("../controllers/tweet.controllers");
 
 const multer = require("multer");
@@ -22,7 +23,7 @@ const upload = multer({ storage: storage });
 router.post("/", upload.single("image"), handleCreateTweet);
 router.get("/:id", handleGetTweet);
 router.delete("/:id", handleDeleteTweet);
-router.get("/", (req, res) => {
-  res.send("ok");
-});
+
+router.post("/:tweetId/like",handleLikeTweet)
+
 module.exports = router;
