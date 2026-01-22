@@ -1,13 +1,10 @@
 const Tweet = require("../models/tweet.models");
 const User = require("../models/user.models");
-const mongoose = require("mongoose");
 
 async function handleGetFeed(req, res) {
   console.log(req.user);
   const user = await User.findById(req.user._id);
   const channelIds = user.channels;
-
-  console.log(channelIds);
 
   const feed = await Tweet.aggregate([
     {
@@ -40,7 +37,7 @@ async function handleGetFeed(req, res) {
   ]);
 
   console.log(feed);
-  res.send(feed);
+  res.status(200).json(feed);
 }
 
 module.exports = handleGetFeed;

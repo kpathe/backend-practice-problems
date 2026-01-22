@@ -8,6 +8,11 @@ async function handleUserSignUp(req, res) {
   if (!fullName || !email || !password)
     return res.send("All fields are required");
 
+  const user = await User.findOne({ email: email });
+  if (user) {
+    return res.status(422).json({ msg: "User already exists" });
+  }
+
   try {
     // const profileURL = ;
     const user = await User.create({
@@ -20,16 +25,21 @@ async function handleUserSignUp(req, res) {
     return res.json({ fullName: user.fullName, email: user.email });
   } catch (error) {
     console.log(error);
-    return res.json({ msg: `Error creating user!`, error: error });
+    return res.status(400).json({ msg: `Error creating user!` });
   }
 }
 
 async function handleUserLogin(req, res) {
   const { email, password } = req.body;
 
-  if (!email || !password) return res.send("All fields are required");
+  if (!email || !password)
+    return res.status(400).json("All fields are required");
 
   const user = await User.findOne({ email: email });
+
+  if (!user) {
+    return res.status(400).json("User doesn't exist");
+  }
   // console.log(user);
   const isPasswordValid = await bcrypt.compare(password, user.password);
   console.log("Password validity : ", isPasswordValid);
@@ -37,7 +47,7 @@ async function handleUserLogin(req, res) {
   if (isPasswordValid) {
     const token = createToken(user);
 
-    return res.cookie("token", token).json({ fullName: user.fullName });
+    return res.cookie("token", token).json({ fullName: user.fullName , email:user.email});
   }
 }
 

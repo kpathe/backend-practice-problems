@@ -4,7 +4,7 @@ const tweetSchema = new Schema(
   {
     content: {
       type: String,
-      required: true,
+      required: false,
     },
     imageURL: {
       type: String,
