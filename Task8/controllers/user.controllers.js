@@ -47,7 +47,9 @@ async function handleUserLogin(req, res) {
   if (isPasswordValid) {
     const token = createToken(user);
 
-    return res.cookie("token", token).json({ fullName: user.fullName , email:user.email});
+    return res
+      .cookie("token", token)
+      .json({ fullName: user.fullName, email: user.email });
   }
 }
 
@@ -63,6 +65,16 @@ async function handleUserLogout(req, res) {
 async function handleFollow(req, res) {
   if (req.params.targetUserId == req.user._id)
     return res.send("Cannot follow own account");
+
+  const alreadyFollowing = await User.exists({
+    _id: req.user._id,
+    channels: req.params.targetUserId,
+  });
+
+  if (alreadyFollowing) {
+    return res.status(200).json("Already following this user.");
+  }
+
   const user = await User.findByIdAndUpdate(
     { _id: req.user._id },
     { $addToSet: { channels: req.params.targetUserId } },
@@ -83,6 +95,16 @@ async function handleFollow(req, res) {
 async function handleUnfollow(req, res) {
   if (req.params.targetUserId == req.user._id)
     return res.send("Cannot unfollow own account");
+
+  const alreadyFollowing = await User.exists({
+    _id: req.user._id,
+    channels: req.params.targetUserId,
+  });
+
+  if (!alreadyFollowing) {
+    return res.status(200).json("Already unfollowing this user.");
+  }
+
   const user = await User.findByIdAndUpdate(
     { _id: req.user._id },
     { $pull: { channels: req.params.targetUserId } },
