@@ -17,14 +17,13 @@ const storage = multer.diskStorage({
     return cb(null, "./public/uploads");
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    return cb(null, file.fieldname + "-" + uniqueSuffix);
+    return cb(null, file.fieldname + "-" + Date.now() + file.originalname);
   },
 });
 
 const upload = multer({ storage: storage });
 
-router.post("/signup",upload.single("profileImage"), handleUserSignUp);
+router.post("/signup", upload.single("profileImage"), handleUserSignUp);
 router.post("/login", handleUserLogin);
 router.get("/logout", handleUserLogout);
 
