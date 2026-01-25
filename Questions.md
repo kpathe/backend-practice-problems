@@ -78,7 +78,7 @@
     5. **Reactions:** Like/Unlike functionality.
 
 
-    ## ⚡ Module 6: Performance & Real-Time (Jan 25 - Jan 27)
+## ⚡ Module 6: Performance & Real-Time (Jan 25 - Jan 27)
 **Focus:** Node.js Streams, Clustering, WebSockets.
 **Goal:** Handle high traffic, large files, and live updates.
 

@@ -1,0 +1,17 @@
+{
+  "name": "socket-chat-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1",
+    "socket.io": "^4.8.3",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.0.2"
+  }
+}
