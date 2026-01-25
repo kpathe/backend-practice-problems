@@ -76,3 +76,100 @@
     3. **Social Graph:** User A follows User B.
     4. **The Feed:** `GET /feed` must show tweets **only** from people the user follows (Requires MongoDB Aggregation).
     5. **Reactions:** Like/Unlike functionality.
+
+
+    ## ⚡ Module 6: Performance & Real-Time (Jan 25 - Jan 27)
+**Focus:** Node.js Streams, Clustering, WebSockets.
+**Goal:** Handle high traffic, large files, and live updates.
+
+- [ ] **Task 8: The "Video Streamer" (Node Streams)**
+    - **Goal:** Learn memory-efficient data handling.
+    - **Why:** Reading a 1GB video file into a variable crashes Node.js. Streams send it chunk by chunk.
+    - **Steps:**
+        1. Create a standalone route `GET /video`.
+        2. Place a large video file (e.g., 100MB+) in your project folder.
+        3. Use `fs.createReadStream()` to pipe the video to the `res` object.
+        4. **Bonus:** Handle the `Range` header (so users can seek/skip forward in the video player).
+
+- [ ] **Task 9: The "Scale Master" (Cluster Module)**
+    - **Goal:** Utilize all CPU cores.
+    - **Why:** Node.js is single-threaded. If you have an 8-core CPU, 7 are sitting idle.
+    - **Steps:**
+        1. Create a `server.js` file that checks `cluster.isPrimary`.
+        2. If Primary: Fork a worker for every CPU core (`os.cpus().length`).
+        3. If Worker: Run your Express app.
+        4. **Test:** Use a load testing tool (like `loadtest`) to hit your server with 1000 requests and see how the OS distributes the load.
+
+- [ ] **Task 10: The "Real-Time" Connection (WebSockets)**
+    - **Goal:** Basic bidirectional communication with Socket.io.
+    - **Steps:**
+        1. Initialize `socket.io` in a simple separate script (or integrate into TweetX).
+        2. **Client Side:** Create a simple HTML page that connects to the server.
+        3. **Server Side:** Listen for a `message` event and broadcast it back to all connected clients.
+        4. **Success:** Open two browser tabs; typing in one logs the message in the other instantly.
+
+---
+
+## 🚀 Module 7: Infrastructure & DevOps (Jan 28)
+**Focus:** Nginx (Reverse Proxy), Serverless Functions.
+**Goal:** Understand how production servers handle traffic and scale.
+
+- [ ] **Task 11: The "Traffic Controller" (Nginx)**
+    - **Goal:** Set up a Reverse Proxy locally.
+    - **Steps:**
+        1. Install Nginx on your local machine (or use Docker).
+        2. Configure `nginx.conf` to listen on Port `80` (HTTP).
+        3. Set up a proxy pass to forward traffic to your TweetX server (running on `localhost:8000`).
+        4. **Success:** Accessing `http://localhost/api/health` in the browser successfully hits your Node server.
+
+- [ ] **Task 12: The "Function" (Serverless)**
+    - **Goal:** Deploy a standalone serverless function.
+    - **Steps:**
+        1. Create a tiny new project (separate from TweetX).
+        2. Write a simple function returning `{"msg": "Hello from Serverless"}`.
+        3. Deploy to **Vercel Functions** or **AWS Lambda**.
+        4. **Success:** Hitting the provided URL returns JSON without a running server process.
+
+---
+
+## 🛠️ Module 8: The "Professional" Refactor (Jan 29 - Jan 30)
+**Focus:** Standardization, Security, Clean Code (Hitesh Sir's Architecture).
+**Goal:** Refactor `TweetX` to use production-grade patterns.
+
+- [ ] **Task 13: The "Standardizer" (Utils & Tokens)**
+    - **Goal:** Remove try-catch blocks and secure Auth.
+    - **Steps:**
+        1. Create `utils/ApiError.js` and `utils/ApiResponse.js` classes.
+        2. Create `utils/asyncHandler.js` wrapper middleware.
+        3. **Security Upgrade:** Implement **Access Token (15m)** and **Refresh Token (10d)** logic in `User` model.
+        4. Update `login` controller to send both tokens as HTTP-Only cookies.
+        5. Create a new endpoint `POST /api/users/refresh-token` to rotate credentials.
+
+- [ ] **Task 14: The "Gatekeeper" (Validation)**
+    - **Goal:** Validate all incoming data.
+    - **Steps:**
+        1. Install `zod`.
+        2. Create validation schemas for **User Signup** and **Tweet Creation**.
+        3. Create a `validate(schema)` middleware.
+        4. Apply middleware to routes. Failures should return a standard `ApiError`.
+
+---
+
+## 🔌 Module 9: Real-World Integrations (Jan 31 - Feb 2)
+**Focus:** SDKs, OAuth, Email Services.
+**Goal:** Transform TweetX into a feature-complete application.
+
+- [ ] **Task 15: "Login with Google" (OAuth 2.0)**
+    - **Goal:** Implement Social Login.
+    - **Steps:**
+        1. Get Client ID/Secret from Google Cloud Console.
+        2. Configure `passport` and `passport-google-oauth20`.
+        3. Create `GET /auth/google` and callback routes.
+        4. **Logic:** Create user if new (password: null), or log in if email exists.
+
+- [ ] **Task 16: "Forgot Password" Flow (Email)**
+    - **Goal:** Secure account recovery.
+    - **Steps:**
+        1. Create `POST /auth/forgot-password`: Generate token, save to DB, email link using **Nodemailer**.
+        2. Create `POST /auth/reset-password`: Verify token, update password.
+        3. **Bonus:** Use a real SMTP service (Gmail, Resend, or Ethereal for testing).
