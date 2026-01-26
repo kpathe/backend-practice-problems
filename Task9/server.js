@@ -21,3 +21,6 @@ if (cluster.isPrimary) {
     console.log(`Server started at PORT : ${PORT}`);
   });
 }
+
+// loadtest -n 1000 -c 100 http://localhost:8000 
+// command to test the server for 1000 concurrent users
