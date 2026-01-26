@@ -22,7 +22,7 @@ app.get("/video", (req, res) => {
 
     const contentLength = end - start + 1;
 
-    console.log(start, end, contentLength,videoSize,range);
+    console.log(start, end, contentLength,videoSize,range)
 
     const headers = {
       "Content-Range": `bytes ${start}-${end}/${videoSize}`,
